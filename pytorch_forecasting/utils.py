@@ -246,7 +246,9 @@ def concat_sequences(
     if isinstance(sequences[0], rnn.PackedSequence):
         return rnn.pack_sequence(sequences, enforce_sorted=False)
     elif isinstance(sequences[0], torch.Tensor):
-        return torch.cat(sequences, dim=1)
+        return torch.cat(sequences, dim=0)  # changed from dim=1 to dim=0, 
+        # https://github.com/jdb78/pytorch-forecasting/issues/1320
+        # https://github.com/jdb78/pytorch-forecasting/issues/1509
     elif isinstance(sequences[0], (tuple, list)):
         return tuple(
             concat_sequences([sequences[ii][i] for ii in range(len(sequences))]) for i in range(len(sequences[0]))
